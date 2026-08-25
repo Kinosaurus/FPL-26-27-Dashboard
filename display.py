@@ -37,7 +37,9 @@ df = get_data()
 
 # Convert strings to numeric if possible
 for col in df.columns:
-    df[col] = pd.to_numeric(df[col], errors="ignore")
+    converted = pd.to_numeric(df[col], errors="coerce")
+    if converted.notna().sum() == df[col].notna().sum():
+        df[col] = converted
 
 
 # =========================
