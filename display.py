@@ -60,36 +60,8 @@ st.write(
 st.sidebar.header("Chart Settings")
 
 
-# X variable
-x_variable = st.sidebar.selectbox(
-    "X-axis",
-    df.columns
-)
-
-
-# Y variable
-y_variable = st.sidebar.selectbox(
-    "Y-axis",
-    df.columns
-)
-
 # Variable to rank by
 numeric_columns = df.select_dtypes(include="number").columns
-
-filter_variable = st.sidebar.selectbox(
-    "Rank players by",
-    numeric_columns
-)
-
-# Top N
-top_n = st.sidebar.slider(
-    "Top N players",
-    min_value=1,
-    max_value=len(df),
-    value=10
-)
-
-df = df.nlargest(top_n, filter_variable)
 
 # Chart type
 chart_type = st.sidebar.selectbox(
@@ -101,29 +73,68 @@ chart_type = st.sidebar.selectbox(
     ]
 )
 
-
 # =========================
 # CHART
 # =========================
 
-st.subheader(
-    f"{y_variable} vs {x_variable}"
-)
-
-
 if chart_type == "Scatter":
 
+    # X variable
+    x_variable = st.sidebar.selectbox(
+        "X-axis",
+        numeric_columns
+    )
+
+
+    # Y variable
+    y_variable = st.sidebar.selectbox(
+        "Y-axis",
+        numeric_columns
+    )
+
+else:
+    # X variable
+    x_variable = st.sidebar.selectbox(
+        "X-axis",
+        df.columns
+    )
+
+
+    # Y variable
+    y_variable = st.sidebar.selectbox(
+        "Y-axis",
+        df.columns
+    )
+
+filter_variable = st.sidebar.selectbox(
+    "Rank players by",
+    ["None"] + list(numeric_columns)
+)
+
+# Top N
+if filter_variable != "None":
+    top_n = st.sidebar.slider(
+        "Top N players",
+        min_value=1,
+        max_value=len(df),
+        value=10
+    )
+
+    df = df.nlargest(top_n, filter_variable)
+
+if chart_type == "Scatter":
+     
     fig = px.scatter(
         df,
         x=x_variable,
         y=y_variable,
         hover_name="web_name"
     )
+     
     st.plotly_chart(
         fig,
-        width=True
+        width="stretch"
     )
-
 
 elif chart_type == "Line":
 
