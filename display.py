@@ -137,6 +137,7 @@ filter_variable = st.sidebar.selectbox(
 )    
 
 # Top N
+top_n = 0
 if filter_variable != "None":
     top_n = st.sidebar.slider(
         "Top N players",
@@ -145,7 +146,7 @@ if filter_variable != "None":
         value=10
     )
 
-    df = df.nlargest(top_n, filter_variable)
+    df = df.nlargest(top_n, filter_variable)        
 
 if chart_type == "Scatter":
      
@@ -168,7 +169,7 @@ elif chart_type == "Line":
         df,
         x=x_variable,
         y=y_variable,
-        title=f"{y_variable} vs {x_variable}",
+        title=f"Top {top_n} Players by {filter_variable}",
         hover_name="web_name",
         hover_data=["team_name"],
         markers=True
@@ -182,13 +183,8 @@ elif chart_type == "Line":
 
 elif chart_type == "Bar":
 
-    chart_df = df.sort_values(
-        by=filter_variable,
-        ascending=False
-    )
-
     fig = px.bar(
-        chart_df,
+        df,
         x=x_variable,
         y=y_variable,
         title=f"Top {top_n} Players by {filter_variable}",
