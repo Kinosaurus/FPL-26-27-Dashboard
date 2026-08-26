@@ -34,11 +34,27 @@ def make_dataframe(source: str=SOURCE) -> pd.DataFrame:
     # print(len(response["elements"]))
     # print(json.dumps(response["elements"][0], indent=4))
 
+    # get_path()
+
+    # print(response["element_types"])
+    # print(response["elements"][0])
+
     # Getting player stats
     player_stats = pd.DataFrame(response["elements"])
+    
     # Getting column names
-    # col_names = player_stats.columns.to_list()
+    col_names = player_stats.columns.to_list()
     # print(col_names)
+
+    # Adding position column
+    position_map = {
+        1: "Goalkeeper",
+        2: "Defender",
+        3: "Midfielder",
+        4: "Forward"
+    }
+
+    player_stats["position"] = player_stats["element_type"].map(position_map)
 
     # Making new column for days at club
     today = pd.Timestamp.today()
