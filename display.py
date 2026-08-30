@@ -15,7 +15,7 @@ SOURCE = "https://fantasy.premierleague.com/api/bootstrap-static/"
 # FETCH DATA
 # =========================
 
-@st.cache_data
+@st.cache_data(ttl=300)
 def get_data():
 
     response = requests.get(SOURCE)
@@ -147,6 +147,10 @@ if filter_variable != "None":
     )
 
     df = df.nlargest(top_n, filter_variable)        
+
+if st.button("🔄 Refresh data"):
+    st.cache_data.clear()
+    st.rerun()
 
 if chart_type == "Scatter":
      
